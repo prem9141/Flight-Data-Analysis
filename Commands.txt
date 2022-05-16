@@ -1,0 +1,52 @@
+
+To Start Hadoop Cluster and HistoryServer:
+$ cd $HADOOP_HOME
+$ hdfs namenode -format
+$ sbin/start-all.sh
+$ sbin/mr-jobhistory-daemon.sh start historyserver
+
+To Upload input file to HDFS:
+$ hdfs dfs -mkdir -p input
+$ hdfs dfs -put input/* input
+
+To Upload oozie's share file to HDFS:
+$ cd $OOZIE_HOME
+$ sudo tar xvf oozie-sharelib-4.3.0.tar.gz #change the sharelib name to your local sharelib name
+$ cd $HADOOP_HOME
+$ hdfs dfs -put $OOZIE_HOME/share share
+
+To Upload workflow.xml to HDFS:
+$ hdfs dfs -mkdir FinalProject
+$ hdfs dfs -put workflow.xml FinalProject
+
+To Compile the java files and make a jar file and upload the jar file to HDFS FinalProject/lib:
+$ java -cp $CLASSPATH *.java
+$ jar cvf FinalProject.jar *.class
+$ hdfs dfs -mkdir FinalProject/lib
+$ hdfs dfs -put FinalProject.jar FinalProject/lib
+
+To Initialize the database of Oozie:
+$ $OOZIE_HOME/bin/ooziedb.sh create -sqlfile oozie.sql -run
+
+To Start Oozie:
+$ $OOZIE_HOME/bin/oozied.sh start
+
+To Check the status of Oozie:
+$ $OOZIE_HOME/bin/oozie admin -oozie http://localhost:11000/oozie -status
+
+To Run the program:
+$ oozie job -oozie http://localhost:11000/oozie -config job.properties -run
+
+To Get results:
+$ hdfs dfs -get FinalProject/output output
+
+To See the result:
+$ vim output/OnScheduleAirlines/part-r-00000
+Exit:
+:q!
+$ vim output/AirportsTaxiTime/part-r-00000
+Exit:
+:q!
+$ vim output/FlightCancellation/part-r-00000
+Exit:
+:q!
